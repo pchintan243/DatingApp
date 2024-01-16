@@ -484,3 +484,8 @@ $RECYCLE.BIN/
 *.swp
 API/appsettings.json
 .editorconfig
+.vscode/
+.angular/
+client/angular.json
+client/package.json
+client/package-lock.json
