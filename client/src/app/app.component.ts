@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
 
   }
 
+  // Fetch the user list
   ngOnInit(): void {
     this.http.get('https://localhost:5001/api/users').subscribe({
       next: response => this.users = response,
