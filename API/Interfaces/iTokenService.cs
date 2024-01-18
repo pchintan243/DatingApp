@@ -2,7 +2,7 @@
 
 namespace API;
 
-public interface iTokenServices
+public interface ITokenService
 {
     string CreateToken(AppUser user);
 

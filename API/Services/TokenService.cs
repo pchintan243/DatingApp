@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace API;
 
-public class TokenService : iTokenServices
+public class TokenService : ITokenService
 {
     // This key is use for encryption & decryption as well.
     private readonly SymmetricSecurityKey _key;
