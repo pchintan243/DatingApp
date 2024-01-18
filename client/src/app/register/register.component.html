@@ -6,6 +6,15 @@
     </div>
 
     <div class="mb-3">
+        <label>Who is your favourite user?</label>
+        <select class="form-select">
+            <option *ngFor="let user of userFromHomeComponent" [value]="user.username">
+                {{user.userName}}
+            </option>
+        </select>
+    </div>
+
+    <div class="mb-3">
         <input type="password" name="password" class="form-control" [(ngModel)]="model.password" placeholder="password">
     </div>
     <div class="text-center">
