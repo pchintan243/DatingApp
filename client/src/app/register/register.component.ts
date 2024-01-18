@@ -1,3 +1,4 @@
+import { AccountService } from './../_services/account.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
@@ -7,14 +8,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class RegisterComponent {
 
-  @Input() userFromHomeComponent: any;
-
   @Output() cancelRegister = new EventEmitter();
 
   model: any = {};
 
+  constructor(private accountService: AccountService) {
+  }
+
   register() {
-    console.log(this.model);
+    this.accountService.register(this.model).subscribe({
+      next: () => {
+        this.cancel();
+      },
+      error: error => console.log(error)
+    })
   }
 
   // It's close the register form
