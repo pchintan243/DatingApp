@@ -74,16 +74,6 @@ namespace API.Controllers
             };
         }
 
-        private ActionResult<UserDto> Unauthorized(string v)
-        {
-            throw new InvalidDataException(v);
-        }
-
-        private ActionResult<UserDto> BadRequest(string v)
-        {
-            throw new NotImplementedException(v);
-        }
-
         private async Task<bool> UserExists(string username)
         {
             return await _context.Users.AnyAsync(x => x.UserName == username.ToLower());
