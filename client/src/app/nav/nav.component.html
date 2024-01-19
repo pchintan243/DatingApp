@@ -15,8 +15,8 @@
             </ng-container>
         </ul>
 
-        // We wrap structure directive to make shown username in our web.
-        // titlecase is use for shown name first letter will be capital
+        <!-- We wrap structure directive to make shown username in our web. -->
+        <!-- titlecase is use for shown name first letter will be capital -->
         <div class="dropdown" *ngIf="(accountService.currentUser$  | async) as user" dropdown>
             <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{user.username |
                 titlecase}}</a>
