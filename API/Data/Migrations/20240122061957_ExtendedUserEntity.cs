@@ -147,14 +147,6 @@ namespace API.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "LookingFor",
                 table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "PasswordHash",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "PasswordSalt",
-                table: "Users");
         }
     }
 }
