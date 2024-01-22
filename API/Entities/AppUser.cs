@@ -26,9 +26,9 @@ namespace API.Entities
         // new List<Photo>() ---> Short hand property: new()
         public List<Photo> Photos { get; set; } = new();
 
-        public int GetAge()
-        {
-            return DateOfBirth.CalculateAge();
-        }
+        // public int GetAge()
+        // {
+        //     return DateOfBirth.CalculateAge();
+        // }
     }
 }
