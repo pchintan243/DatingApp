@@ -8,7 +8,7 @@ import { Member } from '../_models/member';
 })
 export class MembersService {
 
-  baseUrl = environment.apiUrl;
+  baseUrl = "https://localhost:5001/api/";
 
   constructor(private http: HttpClient) { }
 
