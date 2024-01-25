@@ -13,7 +13,7 @@ import { take } from 'rxjs';
 export class PhotoEditorComponent implements OnInit {
   @Input() member: Member | undefined;
   uploader: FileUploader | undefined;
-  hasBaseDropzoneOver = false;
+  hasBaseDropZoneOver = false;
   baseUrl = "https://localhost:5001/api/";
   user: User | undefined;
 
@@ -30,7 +30,7 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   fileOverBase(e: any) {
-    this.hasBaseDropzoneOver = e;
+    this.hasBaseDropZoneOver = e;
   }
 
   initializeUploader() {
