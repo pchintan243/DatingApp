@@ -1,3 +1,5 @@
+import { MembersService } from './../../_services/members.service';
+import { Photo } from './../../_models/photo';
 import { AccountService } from './../../_services/account.service';
 import { Member } from 'src/app/_models/member';
 import { Component, Input, OnInit } from '@angular/core';
@@ -17,7 +19,7 @@ export class PhotoEditorComponent implements OnInit {
   baseUrl = "https://localhost:5001/api/";
   user: User | undefined;
 
-  constructor(private accountService: AccountService) {
+  constructor(private accountService: AccountService, private membersService: MembersService) {
     accountService.currentUser$.pipe(take(1)).subscribe({
       next: user => {
         if (user) this.user = user
@@ -31,6 +33,22 @@ export class PhotoEditorComponent implements OnInit {
 
   fileOverBase(e: any) {
     this.hasBaseDropZoneOver = e;
+  }
+
+  setMainPhoto(photo: Photo) {
+    this.membersService.setMainPhoto(photo.id).subscribe({
+      next: _ => {
+        if (this.user && this.member) {
+          this.user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(this.user);
+          this.member.photoUrl = photo.url;
+          this.member.photos.forEach(p => {
+            if (p.isMain) p.isMain = false;
+            if (p.id === photo.id) p.isMain = true;
+          })
+        }
+      }
+    })
   }
 
   initializeUploader() {
