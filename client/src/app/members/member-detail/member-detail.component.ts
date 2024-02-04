@@ -19,7 +19,7 @@ import { Message } from 'src/app/_models/message';
 })
 export class MemberDetailComponent implements OnInit {
 
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
 
   member: Member | undefined;
   images: GalleryItem[] = [];
@@ -30,15 +30,27 @@ export class MemberDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMember();
+    this.route.queryParams.subscribe({
+      next: params => {
+        params['tab'] && this.selectTab(params['tab'])
+      }
+    })
+  }
+
+  // Using exclamation mark we can stop the strict checking.
+  selectTab(heading: string) {
+    if (this.memberTabs) {
+      this.memberTabs.tabs.find(x => x.heading === heading)!.active = true;
+    }
   }
 
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
-    if (this.activeTab.heading === 'Messages') { 
+    if (this.activeTab.heading === 'Messages') {
       this.loadMessages();
     }
   }
-  
+
   loadMessages() {
     if (this.member) {
       this.messageService.getMessageThread(this.member.userName).subscribe({
@@ -48,7 +60,7 @@ export class MemberDetailComponent implements OnInit {
   }
 
   loadMember() {
-    var username = this.route.snapshot.paramMap.get('username');
+    const username = this.route.snapshot.paramMap.get('username');
     if (!username) return;
     this.membersService.getMember(username).subscribe({
       next: member => {
