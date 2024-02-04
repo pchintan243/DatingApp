@@ -21,7 +21,7 @@ export class MemberDetailComponent implements OnInit {
 
   @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
 
-  member: Member | undefined;
+  member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
   messages: Message[] = [];
@@ -29,12 +29,16 @@ export class MemberDetailComponent implements OnInit {
   constructor(private membersService: MembersService, private route: ActivatedRoute, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.loadMember();
+    this.route.data.subscribe({
+      next: data => this.member = data['member']
+    })
     this.route.queryParams.subscribe({
       next: params => {
         params['tab'] && this.selectTab(params['tab'])
       }
     })
+    
+    this.getImages();
   }
 
   // Using exclamation mark we can stop the strict checking.
@@ -57,17 +61,6 @@ export class MemberDetailComponent implements OnInit {
         next: messages => this.messages = messages
       })
     }
-  }
-
-  loadMember() {
-    const username = this.route.snapshot.paramMap.get('username');
-    if (!username) return;
-    this.membersService.getMember(username).subscribe({
-      next: member => {
-        this.member = member,
-          this.getImages();
-      }
-    })
   }
 
   getImages() {
