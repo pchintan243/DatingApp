@@ -1,14 +1,15 @@
+import { Message } from './../_models/message';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
-import { Message } from '../_models/message';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
 
-  baseUrl = "https://localhost:5001/api/";
+  baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -22,5 +23,9 @@ export class MessageService {
 
   getMessageThread(username: string) {
     return this.http.get<Message[]>(this.baseUrl + 'messages/thread/' + username);
+  }
+
+  sendMessage(username: string, content: string) {
+    return this.http.post<Message>(this.baseUrl + 'messages', { recipientUsername: username, content })
   }
 }

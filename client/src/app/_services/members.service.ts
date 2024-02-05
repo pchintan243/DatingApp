@@ -16,7 +16,7 @@ export class MembersService {
 
   // Storing the members detail in services will saves time to load the member details.
   // Load the data into services is saves time.
-  baseUrl = "https://localhost:5001/api/";
+  baseUrl = environment.apiUrl;
   members: Member[] = [];
   memberCache = new Map();
   user: User | undefined;
