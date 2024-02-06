@@ -24,7 +24,11 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Building cors & solve cors error
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(builder => builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins("https://localhost:4200"));
 
 // It will check user is authorized or not
 app.UseAuthentication();
