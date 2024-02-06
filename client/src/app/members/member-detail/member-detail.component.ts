@@ -1,3 +1,4 @@
+import { PresenceService } from './../../_services/presence.service';
 import { MessageService } from './../../_services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { MembersService } from './../../_services/members.service';
@@ -19,14 +20,14 @@ import { Message } from 'src/app/_models/message';
 })
 export class MemberDetailComponent implements OnInit {
 
-  @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
 
   member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
   messages: Message[] = [];
 
-  constructor(private membersService: MembersService, private route: ActivatedRoute, private messageService: MessageService) { }
+  constructor(private membersService: MembersService, private route: ActivatedRoute, private messageService: MessageService, public presenceService: PresenceService) { }
 
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -37,7 +38,7 @@ export class MemberDetailComponent implements OnInit {
         params['tab'] && this.selectTab(params['tab'])
       }
     })
-    
+
     this.getImages();
   }
 
