@@ -1,8 +1,9 @@
+import { AccountService } from './../../_services/account.service';
 import { PresenceService } from './../../_services/presence.service';
 import { MessageService } from './../../_services/message.service';
 import { ActivatedRoute } from '@angular/router';
 import { MembersService } from './../../_services/members.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Member } from 'src/app/_models/member';
 import { CommonModule } from '@angular/common';
 import { TabDirective, TabsModule, TabsetComponent } from 'ngx-bootstrap/tabs';
@@ -10,6 +11,8 @@ import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 import { TimeagoModule } from 'ngx-timeago';
 import { MemberMessagesComponent } from '../member-messages/member-messages.component';
 import { Message } from 'src/app/_models/message';
+import { take } from 'rxjs';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-member-detail',
@@ -18,7 +21,7 @@ import { Message } from 'src/app/_models/message';
   standalone: true,
   imports: [CommonModule, TabsModule, GalleryModule, TimeagoModule, MemberMessagesComponent]
 })
-export class MemberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit, OnDestroy {
 
   @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
 
@@ -26,8 +29,21 @@ export class MemberDetailComponent implements OnInit {
   images: GalleryItem[] = [];
   activeTab?: TabDirective;
   messages: Message[] = [];
+  user?: User;
 
-  constructor(private membersService: MembersService, private route: ActivatedRoute, private messageService: MessageService, public presenceService: PresenceService) { }
+  constructor(
+    private accountService: AccountService,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    public presenceService: PresenceService) {
+
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user) this.user = user;
+      }
+    })
+  }
+
 
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -42,6 +58,10 @@ export class MemberDetailComponent implements OnInit {
     this.getImages();
   }
 
+  ngOnDestroy(): void {
+    this.messageService.stopHubConnection();
+  }
+
   // Using exclamation mark we can stop the strict checking.
   selectTab(heading: string) {
     if (this.memberTabs) {
@@ -51,8 +71,11 @@ export class MemberDetailComponent implements OnInit {
 
   onTabActivated(data: TabDirective) {
     this.activeTab = data;
-    if (this.activeTab.heading === 'Messages') {
-      this.loadMessages();
+    if (this.activeTab.heading === 'Messages' && this.user) {
+      this.messageService.createHubConnection(this.user, this.member.userName)
+    }
+    else {
+      this.messageService.stopHubConnection();
     }
   }
 
