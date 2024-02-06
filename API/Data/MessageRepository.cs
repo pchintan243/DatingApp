@@ -43,6 +43,11 @@ namespace API.Data
             return await _context.Connections.FindAsync(connectionId);
         }
 
+        public Task<Group> GetGroupForConnection(string connectionId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Message> GetMessage(int id)
         {
             return await _context.Messages.FindAsync(id);
