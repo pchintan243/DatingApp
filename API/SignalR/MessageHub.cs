@@ -35,17 +35,19 @@ namespace API.SignalR
 
             var groupName = GetGroupName(Context.User.GetUserName(), otherUser);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await AddToGroup(groupName);
+
+            var group = await AddToGroup(groupName);
+            await Clients.Group(groupName).SendAsync("UpdatedGroup", group);
 
             var messages = await _messageRepository.GetMessageThread(Context.User.GetUserName(), otherUser);
 
-            await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
+            await Clients.Caller.SendAsync("ReceiveMessageThread", messages);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             var group = await RemoveFromMessageGroup();
-            // await Clients.Group(group.Name).SendAsync("UpdatedGroup", group);
+            await Clients.Group(group.Name).SendAsync("UpdatedGroup");
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -83,8 +85,8 @@ namespace API.SignalR
                 var connections = await PresenceTracker.GetConnectionsForUser(recipient.UserName);
                 if (connections != null)
                 {
-                    await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived", 
-                        new {username = sender.UserName, knownAs = sender.KnownAs});
+                    await _presenceHub.Clients.Clients(connections).SendAsync("NewMessageReceived",
+                        new { username = sender.UserName, knownAs = sender.KnownAs });
                 }
             }
 
