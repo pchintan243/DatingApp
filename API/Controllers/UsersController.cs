@@ -19,7 +19,7 @@ namespace API.Controllers
     [Authorize]
     public class UsersController : BaseApiController
     {
-        
+
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
@@ -30,16 +30,16 @@ namespace API.Controllers
             _mapper = mapper;
             _photoService = photoService;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var currentUser = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUserName());
-            userParams.CurrentUsername = currentUser.UserName;
+            var gender = await _uow.UserRepository.GetUserGender(User.GetUserName());
+            userParams.CurrentUsername = User.GetUserName();
 
             if (string.IsNullOrEmpty(userParams.Gender))
             {
-                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+                userParams.Gender = gender == "male" ? "female" : "male";
             }
 
             var users = await _uow.UserRepository.GetMemberAsync(userParams);
